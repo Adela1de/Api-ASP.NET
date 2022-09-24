@@ -39,6 +39,7 @@ namespace PokemonReviewApp_youtube
                         Owner = new Owner()
                         {
                             Gym = "Brocks Gym",
+                            Name = "Lucas Rogerio",
                             Country = new Country()
                             {
                                 Name = "Kanto"
@@ -68,6 +69,7 @@ namespace PokemonReviewApp_youtube
                         Owner = new Owner()
                         {
                             Gym = "Mistys Gym",
+                            Name = "Aderbal Figueiredo",
                             Country = new Country()
                             {
                                 Name = "Saffron City"
@@ -97,6 +99,7 @@ namespace PokemonReviewApp_youtube
                         Owner = new Owner()
                         {
                             Gym = "Ashs Gym",
+                            Name = "Lucia Gomes",
                             Country = new Country()
                             {
                                 Name = "Millet Town"
