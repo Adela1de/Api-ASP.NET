@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using PokemonReviewApp_youtube;
 using PokemonReviewApp_youtube.Data;
+using PokemonReviewApp_youtube.Interfaces;
+using PokemonReviewApp_youtube.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddTransient<Seed>();
+builder.Services.AddScoped<IPokemonRepository, PokemonRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(options =>
