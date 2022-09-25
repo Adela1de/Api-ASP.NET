@@ -1,14 +1,12 @@
 ﻿using PokemonReviewApp_youtube.Data;
-using PokemonReviewApp_youtube.Interfaces;
 using PokemonReviewApp_youtube.Models;
-using System.Linq;
 
-namespace PokemonReviewApp_youtube.Repositories
+namespace PokemonReviewApp_youtube.Repositories.Impl
 {
-    public class PokemonRepository : IPokemonRepository
+    public class PokemonRepositoryImpl : IPokemonRepository
     {
         private readonly DataContext _dataContext;
-        public PokemonRepository(DataContext context) 
+        public PokemonRepositoryImpl(DataContext context)
         {
             _dataContext = context;
         }
@@ -23,14 +21,9 @@ namespace PokemonReviewApp_youtube.Repositories
             return _dataContext.Pokemons.Where(p => p.Name == name).FirstOrDefault();
         }
 
-        public decimal GetPokemonRating(int pokemonId)
+        public ICollection<Review> GetReviewsForAPokemon(Pokemon pokemon)
         {
-            var review = _dataContext.Reviews.Where(r => r.Pokemon.Id == pokemonId);
-            var reviewSize = review == null ? 0 : review.Count();
-
-            if (reviewSize <= 0) return 0;
-
-            return (decimal) review.Sum(r => r.Rating) / reviewSize;
+            return _dataContext.Reviews.Where(r => r.Pokemon == pokemon).ToList();
         }
 
         public ICollection<Pokemon> GetPokemons()
@@ -41,6 +34,11 @@ namespace PokemonReviewApp_youtube.Repositories
         public bool PokemonExists(int pokemonId)
         {
             return _dataContext.Pokemons.Any(p => p.Id == pokemonId);
+        }
+
+        public Pokemon SavePokemon(Pokemon pokemon)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,13 +1,13 @@
 ﻿using PokemonReviewApp_youtube.Models;
 
-namespace PokemonReviewApp_youtube.Interfaces
+namespace PokemonReviewApp_youtube.Services
 {
-    public interface IPokemonRepository
+    public interface IPokemonService
     {
         ICollection<Pokemon> GetPokemons();
         Pokemon GetPokemonById(int pokemonId);
-        Pokemon GetPokemonByName(string name);
         decimal GetPokemonRating(int pokemonId);
         public bool PokemonExists(int pokemonId);
+        Pokemon SavePokemon(Pokemon pokemon);
     }
 }

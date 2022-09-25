@@ -1,10 +1,8 @@
-﻿
-
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PokemonReviewApp_youtube.Dto;
-using PokemonReviewApp_youtube.Interfaces;
 using PokemonReviewApp_youtube.Models;
+using PokemonReviewApp_youtube.Services;
 
 namespace PokemonReviewApp_youtube.Controllers
 {
@@ -12,11 +10,11 @@ namespace PokemonReviewApp_youtube.Controllers
     [ApiController]
     public class PokemonController : Controller
     {
-        private readonly IPokemonRepository _pokemonRepository;
+        private readonly IPokemonService _pokemonService;
         private readonly IMapper _mapper;
-        public PokemonController(IPokemonRepository pokemonRepository, IMapper mapper)
+        public PokemonController(IPokemonService pokemonService, IMapper mapper)
         {
-            _pokemonRepository = pokemonRepository;
+            _pokemonService = pokemonService;
             _mapper = mapper;
         }
 
@@ -24,7 +22,7 @@ namespace PokemonReviewApp_youtube.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<PokemonDto>))]
         public IActionResult GetPokemons()
         {
-            var pokemons = _mapper.Map<List<PokemonDto>>(_pokemonRepository.GetPokemons());
+            var pokemons = _mapper.Map<List<PokemonDto>>(_pokemonService.GetPokemons());
 
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -38,7 +36,7 @@ namespace PokemonReviewApp_youtube.Controllers
         public IActionResult GetPokemonById(int pokemonId)
         {
             if (!PokemonExists(pokemonId)) return NotFound();
-            var pokemon = _mapper.Map<PokemonDto>(_pokemonRepository.GetPokemonById(pokemonId));
+            var pokemon = _mapper.Map<PokemonDto>(_pokemonService.GetPokemonById(pokemonId));
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             return Ok(pokemon);
@@ -50,7 +48,7 @@ namespace PokemonReviewApp_youtube.Controllers
         public IActionResult GetPokemonRating(int pokemonId)
         {
             if (!PokemonExists(pokemonId)) return NotFound();
-            var pokemonRating = _pokemonRepository.GetPokemonRating(pokemonId);
+            var pokemonRating = _pokemonService.GetPokemonRating(pokemonId);
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             return Ok(pokemonRating);
@@ -58,7 +56,7 @@ namespace PokemonReviewApp_youtube.Controllers
 
         private bool PokemonExists(int pokemonId)
         {
-            return _pokemonRepository.PokemonExists(pokemonId);
+            return _pokemonService.PokemonExists(pokemonId);
         }
     }
 }
