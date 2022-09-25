@@ -1,5 +1,6 @@
 ﻿
 
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PokemonReviewApp_youtube.Dto;
 using PokemonReviewApp_youtube.Interfaces;
@@ -12,16 +13,18 @@ namespace PokemonReviewApp_youtube.Controllers
     public class PokemonController : Controller
     {
         private readonly IPokemonRepository _pokemonRepository;
-        public PokemonController(IPokemonRepository pokemonRepository)
+        private readonly IMapper _mapper;
+        public PokemonController(IPokemonRepository pokemonRepository, IMapper mapper)
         {
             _pokemonRepository = pokemonRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<Pokemon>))]
-        public IActionResult getPokemons()
+        [ProducesResponseType(200, Type = typeof(IEnumerable<PokemonDto>))]
+        public IActionResult GetPokemons()
         {
-            var pokemons = _pokemonRepository.GetPokemons();
+            var pokemons = _mapper.Map<List<PokemonDto>>(_pokemonRepository.GetPokemons());
 
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -32,39 +35,30 @@ namespace PokemonReviewApp_youtube.Controllers
         [ProducesResponseType(200, Type = typeof(Pokemon))]
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
-        public IActionResult getPokemonById(int pokemonId)
+        public IActionResult GetPokemonById(int pokemonId)
         {
-            if (!_pokemonRepository.PokemonExists(pokemonId)) return NotFound();
-            var pokemon = _pokemonRepository.GetPokemonById(pokemonId);
+            if (!PokemonExists(pokemonId)) return NotFound();
+            var pokemon = _mapper.Map<PokemonDto>(_pokemonRepository.GetPokemonById(pokemonId));
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             return Ok(pokemon);
         }
-
-        /*
-        [HttpGet("{pokemonName}")]
-        [ProducesResponseType(200, Type = typeof(Pokemon))]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(400)]
-        public IActionResult getPokemonByName(string pokemonName)
-        {
-            var pokemon = _pokemonRepository.GetPokemonByName(pokemonName);
-            if (pokemon == null) return NotFound();
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            
-            return Ok(pokemon);
-        }
-        */
-
+        
         [HttpGet("{pokemonId}/rating")]
         [ProducesResponseType(200, Type = typeof(decimal))]
         [ProducesResponseType(400)]
-        public IActionResult getPokemonRating(int pokemonId)
+        public IActionResult GetPokemonRating(int pokemonId)
         {
+            if (!PokemonExists(pokemonId)) return NotFound();
             var pokemonRating = _pokemonRepository.GetPokemonRating(pokemonId);
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             return Ok(pokemonRating);
+        }
+
+        private bool PokemonExists(int pokemonId)
+        {
+            return _pokemonRepository.PokemonExists(pokemonId);
         }
     }
 }
