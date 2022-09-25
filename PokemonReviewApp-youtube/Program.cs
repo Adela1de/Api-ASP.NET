@@ -14,6 +14,8 @@ builder.Services.AddControllers();
 builder.Services.AddTransient<Seed>();
 builder.Services.AddScoped<IPokemonRepository, PokemonRepositoryImpl>();
 builder.Services.AddScoped<IPokemonService, PokemonServiceImpl>();
+builder.Services.AddScoped<IOwnerRepository, OwnerRepositoryImpl>();
+builder.Services.AddScoped<IOwnerService, OwnerServiceImpl>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<DataContext>(options =>

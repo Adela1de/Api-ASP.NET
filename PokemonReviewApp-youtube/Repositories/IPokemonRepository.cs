@@ -4,9 +4,9 @@ namespace PokemonReviewApp_youtube.Repositories
 {
     public interface IPokemonRepository
     {
-        ICollection<Pokemon> GetPokemons();
-        Pokemon GetPokemonById(int pokemonId);
-        Pokemon GetPokemonByName(string name);
+        ICollection<Pokemon> FindAll();
+        Pokemon FindById(int pokemonId);
+        Pokemon FindByName(string name);
         ICollection<Review> GetReviewsForAPokemon(Pokemon pokemon);
         public bool PokemonExists(int pokemonId);
         Pokemon SavePokemon(Pokemon pokemon);

@@ -12,12 +12,12 @@ namespace PokemonReviewApp_youtube.Services.Impl
         }
         public Pokemon GetPokemonById(int pokemonId)
         {
-            return _pokemonRepository.GetPokemonById(pokemonId);
+            return _pokemonRepository.FindById(pokemonId);
         }
 
         public decimal GetPokemonRating(int pokemonId)
         {
-            var pokemon = _pokemonRepository.GetPokemonById(pokemonId);
+            var pokemon = _pokemonRepository.FindById(pokemonId);
             var reviews = _pokemonRepository.GetReviewsForAPokemon(pokemon);
             var reviewSize = reviews == null ? 0 : reviews.Count();
 
@@ -28,7 +28,7 @@ namespace PokemonReviewApp_youtube.Services.Impl
 
         public ICollection<Pokemon> GetPokemons()
         {
-            return _pokemonRepository.GetPokemons();
+            return _pokemonRepository.FindAll();
         }
 
         public bool PokemonExists(int pokemonId)

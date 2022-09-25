@@ -11,10 +11,12 @@ namespace PokemonReviewApp_youtube.Controllers
     public class PokemonController : Controller
     {
         private readonly IPokemonService _pokemonService;
+        private readonly IOwnerService _ownerService;
         private readonly IMapper _mapper;
-        public PokemonController(IPokemonService pokemonService, IMapper mapper)
+        public PokemonController(IPokemonService pokemonService,IOwnerService ownerService, IMapper mapper)
         {
             _pokemonService = pokemonService;
+            _ownerService = ownerService;
             _mapper = mapper;
         }
 
@@ -29,7 +31,18 @@ namespace PokemonReviewApp_youtube.Controllers
             return Ok(pokemons);
         }
 
-        [HttpGet("{pokemonId}")]
+        [HttpGet("/owners")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Owner>))]
+        public IActionResult GetOwners()
+        {
+            var owners = _ownerService.FindAll();
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            return Ok(owners);
+        }
+
+        [HttpGet("pokemons/{pokemonId}")]
         [ProducesResponseType(200, Type = typeof(Pokemon))]
         [ProducesResponseType(404)]
         [ProducesResponseType(400)]
@@ -42,7 +55,7 @@ namespace PokemonReviewApp_youtube.Controllers
             return Ok(pokemon);
         }
         
-        [HttpGet("{pokemonId}/rating")]
+        [HttpGet("pokemons/{pokemonId}/rating")]
         [ProducesResponseType(200, Type = typeof(decimal))]
         [ProducesResponseType(400)]
         public IActionResult GetPokemonRating(int pokemonId)
@@ -54,9 +67,35 @@ namespace PokemonReviewApp_youtube.Controllers
             return Ok(pokemonRating);
         }
 
+        [HttpGet("pokemons/new")]
+        [ProducesResponseType(201, Type = typeof(PokemonDto))]
+        [ProducesResponseType(400)]
+        public IActionResult CreatePokemon(int pokemonId)
+        {
+            return null;
+        }
+
+        [HttpGet("owners/{ownerId}")]
+        [ProducesResponseType(200, Type = typeof(Owner))]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public IActionResult GetOwnerById(int ownerId)
+        {
+            if (!OwnerExists(ownerId)) return NotFound();
+            var owner = _ownerService.FindById(ownerId);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            return Ok(owner);
+        }
+
         private bool PokemonExists(int pokemonId)
         {
             return _pokemonService.PokemonExists(pokemonId);
+        }
+
+        private bool OwnerExists(int ownerId)
+        {
+            return _ownerService.OwnerExists(ownerId);
         }
     }
 }

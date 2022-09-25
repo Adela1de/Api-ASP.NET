@@ -11,12 +11,12 @@ namespace PokemonReviewApp_youtube.Repositories.Impl
             _dataContext = context;
         }
 
-        public Pokemon GetPokemonById(int id)
+        public Pokemon FindById(int id)
         {
             return _dataContext.Pokemons.Where(p => p.Id == id).FirstOrDefault();
         }
 
-        public Pokemon GetPokemonByName(string name)
+        public Pokemon FindByName(string name)
         {
             return _dataContext.Pokemons.Where(p => p.Name == name).FirstOrDefault();
         }
@@ -26,7 +26,7 @@ namespace PokemonReviewApp_youtube.Repositories.Impl
             return _dataContext.Reviews.Where(r => r.Pokemon == pokemon).ToList();
         }
 
-        public ICollection<Pokemon> GetPokemons()
+        public ICollection<Pokemon> FindAll()
         {
             return _dataContext.Pokemons.OrderBy(p => p.Id).ToList();
         }
