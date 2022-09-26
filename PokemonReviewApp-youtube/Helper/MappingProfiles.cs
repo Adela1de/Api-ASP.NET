@@ -9,6 +9,7 @@ namespace PokemonReviewApp_youtube.Helper
         public MappingProfiles()
         {
             CreateMap<Pokemon, PokemonDto>();
+            CreateMap<CategoryDto, Category>();
         }
     }
 }

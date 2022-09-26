@@ -67,12 +67,21 @@ namespace PokemonReviewApp_youtube.Controllers
             return Ok(pokemonRating);
         }
 
-        [HttpGet("pokemons/new")]
-        [ProducesResponseType(201, Type = typeof(PokemonDto))]
+        [HttpPost]
+        [ProducesResponseType(204, Type = typeof(PokemonDto))]
         [ProducesResponseType(400)]
-        public IActionResult CreatePokemon(int pokemonId)
+        public IActionResult CreatePokemon([FromQuery] int ownerId, 
+                                            [FromQuery] int catId, 
+                                            [FromBody] PokemonDto pokemonCreate)
         {
-            return null;
+            if (pokemonCreate == null) return BadRequest();
+            if (_pokemonService.GetByName(pokemonCreate.Name) != null)
+            {
+                ModelState.AddModelError("", "This pokemon already exists");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully created");
         }
 
         [HttpGet("owners/{ownerId}")]
@@ -88,6 +97,30 @@ namespace PokemonReviewApp_youtube.Controllers
             return Ok(owner);
         }
 
+        [HttpPost("categories/create")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateCategory([FromBody] CategoryDto categoryDto)
+        {
+            if(categoryDto == null) return BadRequest(ModelState);
+
+            if(_pokemonService.GetCategoryByName(categoryDto.Name) != null)
+            {
+                ModelState.AddModelError("", "Category already exists!");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var category = _mapper.Map<Category>(categoryDto);
+
+            if(!_pokemonService.CreateCategory(category))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("Successfully created");
+        }
         private bool PokemonExists(int pokemonId)
         {
             return _pokemonService.PokemonExists(pokemonId);

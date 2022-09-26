@@ -36,9 +36,33 @@ namespace PokemonReviewApp_youtube.Repositories.Impl
             return _dataContext.Pokemons.Any(p => p.Id == pokemonId);
         }
 
-        public Pokemon SavePokemon(Pokemon pokemon)
+        public bool SavePokemon(Owner owner, Category category, Pokemon pokemon)
         {
-            throw new NotImplementedException();
+            var pokemonOwner = new PokemonOwner()
+            {
+                Pokemon = pokemon,
+                Owner = owner,
+            };
+
+            _dataContext.Add(pokemonOwner);
+
+            var pokemonCategory = new PokemonCategory()
+            {
+                Pokemon = pokemon,
+                Category = category,
+            };
+
+            _dataContext.Add(pokemonCategory);
+
+            _dataContext.Add(pokemon);
+
+            return Save();
         }
+
+        private bool Save()
+        {
+            return _dataContext.SaveChanges() > 0 ? true : false;
+        }
+
     }
 }

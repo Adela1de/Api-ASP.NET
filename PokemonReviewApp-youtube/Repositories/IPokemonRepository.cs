@@ -9,6 +9,6 @@ namespace PokemonReviewApp_youtube.Repositories
         Pokemon FindByName(string name);
         ICollection<Review> GetReviewsForAPokemon(Pokemon pokemon);
         public bool PokemonExists(int pokemonId);
-        Pokemon SavePokemon(Pokemon pokemon);
+        bool SavePokemon(Owner owner, Category category, Pokemon pokemon);
     }
 }
