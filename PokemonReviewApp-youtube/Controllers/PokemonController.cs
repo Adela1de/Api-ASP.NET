@@ -70,6 +70,7 @@ namespace PokemonReviewApp_youtube.Controllers
         [HttpPost]
         [ProducesResponseType(204, Type = typeof(PokemonDto))]
         [ProducesResponseType(400)]
+        [IllegalTimeExceptionFilter]
         public IActionResult CreatePokemon([FromQuery] int ownerId, 
                                             [FromQuery] int catId, 
                                             [FromBody] PokemonDto pokemonCreate)
