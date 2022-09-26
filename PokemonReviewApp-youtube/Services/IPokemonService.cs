@@ -12,5 +12,6 @@ namespace PokemonReviewApp_youtube.Services
         Pokemon GetByName(string pokemonName);
         bool CreateCategory(Category category);
         Category GetCategoryByName(String name);
+        bool DeletePokemon(int pokemonId);
     }
 }

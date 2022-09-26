@@ -58,6 +58,12 @@ namespace PokemonReviewApp_youtube.Repositories.Impl
 
             return Save();
         }
+        public bool DeletePokemon(int pokemonId)
+        {
+            var pokemon = FindById(pokemonId);
+            _dataContext.Remove(pokemon);
+            return Save();
+        }
 
         private bool Save()
         {

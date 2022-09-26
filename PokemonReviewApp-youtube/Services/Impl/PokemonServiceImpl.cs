@@ -85,5 +85,10 @@ namespace PokemonReviewApp_youtube.Services.Impl
         {
             return _categoryRepository.FindByName(name);
         }
+
+        public bool DeletePokemon(int pokemonId)
+        {
+            return _pokemonRepository.DeletePokemon(pokemonId);
+        }
     }
 }

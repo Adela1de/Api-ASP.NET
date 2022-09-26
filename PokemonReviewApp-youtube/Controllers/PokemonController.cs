@@ -70,7 +70,7 @@ namespace PokemonReviewApp_youtube.Controllers
         [HttpPost]
         [ProducesResponseType(204, Type = typeof(PokemonDto))]
         [ProducesResponseType(400)]
-        public IActionResult CreatePokemon([FromQuery] int ownerId, 
+        public IActionResult CreatePokemon( [FromQuery] int ownerId, 
                                             [FromQuery] int catId, 
                                             [FromBody] PokemonDto pokemonCreate)
         {
@@ -139,6 +139,20 @@ namespace PokemonReviewApp_youtube.Controllers
                 return StatusCode(500, ModelState);
             }
             return Ok("Successfully created");
+        }
+
+        [HttpDelete("pokemons/delete/{pokemonId}")]
+        [ProducesResponseType(200)]
+        public IActionResult DeletePokemon(int pokemonId)
+        {
+            if (!_pokemonService.PokemonExists(pokemonId)) return NotFound();
+            if (!_pokemonService.DeletePokemon(pokemonId))
+            {
+                ModelState.AddModelError("", "Could not delete pokemon");
+                return BadRequest(ModelState);
+            }
+            
+            return Ok("Successfully deleted");
         }
         private bool PokemonExists(int pokemonId)
         {
