@@ -70,7 +70,6 @@ namespace PokemonReviewApp_youtube.Controllers
         [HttpPost]
         [ProducesResponseType(204, Type = typeof(PokemonDto))]
         [ProducesResponseType(400)]
-        [IllegalTimeExceptionFilter]
         public IActionResult CreatePokemon([FromQuery] int ownerId, 
                                             [FromQuery] int catId, 
                                             [FromBody] PokemonDto pokemonCreate)
@@ -80,6 +79,25 @@ namespace PokemonReviewApp_youtube.Controllers
             {
                 ModelState.AddModelError("", "This pokemon already exists");
                 return StatusCode(500, ModelState);
+            }
+
+            var pokemon = new Pokemon();
+            var date = new DateTime();
+
+            try { date = CreateDate(pokemonCreate.BirthDate); }
+            catch (ArgumentOutOfRangeException) 
+            {
+                ModelState.AddModelError("", "Invalid birth date! ");
+                return StatusCode(500, ModelState);
+            };
+
+            pokemon.Name = pokemonCreate.Name;
+            pokemon.BirthDate = date;
+            
+            if(!_pokemonService.SavePokemon(ownerId, catId, pokemon))
+            {
+                ModelState.AddModelError("", "Something went wrong trying to save pokemon");
+                return BadRequest(ModelState);
             }
 
             return Ok("Successfully created");
@@ -130,6 +148,11 @@ namespace PokemonReviewApp_youtube.Controllers
         private bool OwnerExists(int ownerId)
         {
             return _ownerService.OwnerExists(ownerId);
+        }
+
+        private DateTime CreateDate(int[] time)
+        {
+             return new DateTime(time[0], time[1], time[2]);
         }
     }
 }

@@ -45,14 +45,14 @@ namespace PokemonReviewApp_youtube.Services.Impl
             return (_pokemonRepository.PokemonExists(pokemonId));
         }
 
-        public String SavePokemon(int ownerId, int categoryId, Pokemon pokemon)
+        public bool SavePokemon(int ownerId, int categoryId, Pokemon pokemon)
         {
             var ownerEntity = findOwnerByIdOrElseThrowException(ownerId);
             var categoryEntity = findCategoryByIdOrElseThrowException(categoryId);
             if (!_pokemonRepository.SavePokemon(ownerEntity, categoryEntity, pokemon))
                 throw new CouldNotSavePokemonException("Error trying to save pokemon");
 
-            return "Successfuly saved!";
+            return true;
         }
 
         private Owner findOwnerByIdOrElseThrowException(int ownerId)
